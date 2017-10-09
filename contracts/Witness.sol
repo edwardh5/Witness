@@ -10,11 +10,12 @@ contract Witness {
   struct User {
     bytes32 username;
     bytes32[] posts;
+    address[] following;
     bool exists;
   }
 
-  mapping (address => User) public users;
-  mapping (bytes32 => bool) public usernames;
+  mapping (address => User) private users;
+  mapping (bytes32 => bool) private usernames;
 
   function Witness() {
     owner = msg.sender;
@@ -28,6 +29,12 @@ contract Witness {
     _;
   }
 
+  /* Does this ensure what it's supposed to ensure? */
+  modifier userExists(address _userAddress) {
+    require(users[_userAddress].exists == true);
+    _;
+  }
+
   function getUser(address _userAddress) constant returns(bytes32, bytes32[]) {
     return (
       users[_userAddress].username,
@@ -36,11 +43,13 @@ contract Witness {
   }
 
   function createNewUser(bytes32 _username) ensureNewUser(_username) returns(bool) {
-    bytes32[] memory newPosts;
+    bytes32[] memory _posts;
+    address[] memory _following;
 
     User memory newUser = User({
       username: _username,
-      posts: newPosts,
+      posts: _posts,
+      following: _following,
       exists: true
     });
 
@@ -51,8 +60,14 @@ contract Witness {
     return true;
   }
 
-  function createNewPost(bytes32 _body) returns(bool) {
+  function createNewPost(bytes32 _body) userExists(msg.sender) returns(bool) {
     users[msg.sender].posts.push(_body);
     return true;
+  }
+
+  function followUser(address _userAddress)
+  userExists(msg.sender)
+  userExists(_userAddress) {
+    users[msg.sender].following.push(_userAddress);
   }
 }
