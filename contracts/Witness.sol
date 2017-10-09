@@ -75,8 +75,8 @@ contract Witness {
   function followUser(address _userAddress)
   userExists(msg.sender)
   userExists(_userAddress)
-  notSelf(address _userAddress)
-  notSelf {
+  notSelf(_userAddress)
+  {
     users[msg.sender].following.push(_userAddress);
   }
 }
