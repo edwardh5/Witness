@@ -35,10 +35,16 @@ contract Witness {
     _;
   }
 
-  function getUser(address _userAddress) constant returns(bytes32, bytes32[]) {
+  modifier notSelf(address _userAddress) {
+    require(_userAddress != msg.sender);
+    _;
+  }
+
+  function getUser(address _userAddress) constant returns(bytes32, bytes32[], address[]) {
     return (
       users[_userAddress].username,
-      users[_userAddress].posts
+      users[_userAddress].posts,
+      users[_userAddress].following
     );
   }
 
@@ -61,13 +67,16 @@ contract Witness {
   }
 
   function createNewPost(bytes32 _body) userExists(msg.sender) returns(bool) {
+    require(_body.length > 0);
     users[msg.sender].posts.push(_body);
     return true;
   }
 
   function followUser(address _userAddress)
   userExists(msg.sender)
-  userExists(_userAddress) {
+  userExists(_userAddress)
+  notSelf(address _userAddress)
+  notSelf {
     users[msg.sender].following.push(_userAddress);
   }
 }
