@@ -11,23 +11,20 @@ contract Witness is Ownable {
     bytes32 username;
     bytes32[] posts;
     address[] following;
-    bool exists;
   }
 
   mapping (address => User) private users;
   mapping (bytes32 => bool) private usernames;
 
-  modifier ensureNewUser(bytes32 _username) {
-    require(
-      users[msg.sender].exists != true &&
-      usernames[_username] != true
-    );
+// =============================== Modifiers ==================================
+
+  modifier ensureUsernameUnused(bytes32 _username) {
+    require(usernames[_username] != true);
     _;
   }
 
-  /* Does this ensure what it's supposed to ensure? */
   modifier userExists(address _userAddress) {
-    require(users[_userAddress].exists == true);
+    require(users[_userAddress].username != 0x0);
     _;
   }
 
@@ -36,25 +33,39 @@ contract Witness is Ownable {
     _;
   }
 
-  modifier ensureExists(bytes32 name) {
+  modifier ensureIsNonZero(bytes32 name) {
     require(name != 0x0);
     _;
   }
 
 // ============================= Auth functions ================================
 
-  function login() ensureExists(users[msg.sender].username) constant returns(bytes32) {
+  function login()
+    ensureIsNonZero(users[msg.sender].username)
+    constant
+    returns(bytes32)
+  {
     return (users[msg.sender].username);
   }
 
-  function signup(bytes32 _username) ensureExists(_username) payable returns(bytes32) {
+  function signup(bytes32 _username)
+    ensureIsNonZero(_username)
+    payable
+    returns(bytes32)
+  {
     if (users[msg.sender].username == 0x0) {
       users[msg.sender].username = _username;
+
+      /*usernames[_username] = true;*/
     }
     return (users[msg.sender].username);
   }
 
-  function update(bytes32 _username) ensureExists(_username) payable returns(bytes32) {
+  function update(bytes32 _username)
+    ensureIsNonZero(_username)
+    payable
+    returns(bytes32)
+  {
     if (users[msg.sender].username != 0x0) {
       users[msg.sender].username = _username;
       return (users[msg.sender].username);
@@ -72,35 +83,24 @@ contract Witness is Ownable {
     );
   }
 
-  function createNewUser(bytes32 _username) ensureNewUser(_username) returns(bool) {
-    bytes32[] memory _posts;
-    address[] memory _following;
-
-    User memory newUser = User({
-      username: _username,
-      posts: _posts,
-      following: _following,
-      exists: true
-    });
-
-    /*There's probably a better/less expensive way way to check for existence of a username*/
-    usernames[_username] = true;
-
-    users[msg.sender] = newUser;
-    return true;
-  }
-
-  function createNewPost(bytes32 _body) userExists(msg.sender) returns(bool) {
+  function createNewPost(bytes32 _body)
+    userExists(msg.sender)
+    returns(bool)
+  {
     require(_body.length > 0);
     users[msg.sender].posts.push(_body);
     return true;
   }
 
   function followUser(address _userAddress)
-  userExists(msg.sender)
-  userExists(_userAddress)
-  notSelf(_userAddress)
+    userExists(msg.sender)
+    userExists(_userAddress)
+    notSelf(_userAddress)
   {
     users[msg.sender].following.push(_userAddress);
+  }
+
+  function loadFeedOfFollowing(address _userAddress) {
+
   }
 }
