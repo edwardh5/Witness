@@ -9,7 +9,7 @@ import getWeb3 from './util/web3/getWeb3'
 // Layouts
 import App from './App'
 import Home from './layouts/home/Home'
-import Dashboard from './layouts/dashboard/Dashboard'
+import Feed from './layouts/feed/Feed'
 import SignUp from './user/layouts/signup/SignUp'
 import Profile from './user/layouts/profile/Profile'
 
@@ -33,7 +33,7 @@ ReactDOM.render((
       <Router history={history}>
         <Route path="/" component={App}>
           <IndexRoute component={Home} />
-          <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
+          <Route path="feed" component={UserIsAuthenticated(Feed)} />
           <Route path="signup" component={UserIsNotAuthenticated(SignUp)} />
           <Route path="profile" component={UserIsAuthenticated(Profile)} />
         </Route>
