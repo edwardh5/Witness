@@ -17,6 +17,8 @@ contract Witness {
   mapping (address => User) private users;
   mapping (bytes32 => bool) private usernames;
 
+  uint private id; // Stores user id temporarily
+
   function Witness() {
     owner = msg.sender;
   }
@@ -39,6 +41,34 @@ contract Witness {
     require(_userAddress != msg.sender);
     _;
   }
+
+  modifier ensureExists(bytes32 name) {
+    require(name != 0x0);
+    _;
+  }
+
+// ============================= Auth functions ================================
+
+  function login() ensureExists(users[msg.sender.username]) constant returns(bytes32) {
+    return (users[msg.sender].username);
+  }
+
+  function signup(bytes32 _username) ensureExists(_username) payable returns(bytes32) {
+    if (users[msg.sender].username == 0x0) {
+      users[msg.sender].username = _name;
+    }
+    return (users[msg.sender].username);
+  }
+
+  function update(bytes32 _username) ensureExists(_username) payable returns(bytes32) {
+    if (users[msg.sender].username != 0x0) {
+      users[msg.sender].username = _username;
+      return (users[msg.sender].username);
+    }
+    revert();
+  }
+
+// ============================ Contract functions =============================
 
   function getUser(address _userAddress) constant returns(bytes32, bytes32[], address[]) {
     return (
