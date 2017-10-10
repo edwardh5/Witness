@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import PostForm from './PostForm'
 import { createPost } from './PostFormActions'
 
 
@@ -32,13 +31,13 @@ class PostForm extends Component {
     return(
       <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit.bind(this)}>
         <fieldset>
-          <label htmlFor="name">Username</label>
-          <input id="name" type="text" value={this.state.username} onChange={this.onInputChange.bind(this)} placeholder="Name" />
+          <label htmlFor="post">Post</label>
+          <textarea id="post" type="text" value={this.state.post} onChange={this.onInputChange.bind(this)} />
           <span className="pure-form-message">This is a required field.</span>
 
           <br />
 
-          <button type="submit" className="pure-button pure-button-primary">Sign Up</button>
+          <button type="submit" className="pure-button pure-button-primary">Post</button>
         </fieldset>
       </form>
     )
@@ -51,10 +50,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onPostFormSubmit: (name) => {
+    onPostFormSubmit: (post) => {
       event.preventDefault();
 
-      dispatch(createPost(name))
+      dispatch(createPost(post))
     }
   }
 }

@@ -12,6 +12,7 @@ import Home from './components/Home'
 import Feed from './components/Feed'
 import SignUp from './views/SignUpView'
 import Profile from './views/ProfileView'
+import Post from './views/PostView'
 
 // Redux Store
 import store from './store'
@@ -34,6 +35,7 @@ ReactDOM.render((
         <Route path="/" component={App}>
           <IndexRoute component={Home} />
           <Route path="feed" component={UserIsAuthenticated(Feed)} />
+          <Route path="post" component={UserIsAuthenticated(Post)} />
           <Route path="signup" component={UserIsNotAuthenticated(SignUp)} />
           <Route path="profile" component={UserIsAuthenticated(Profile)} />
         </Route>

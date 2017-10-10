@@ -20,6 +20,9 @@ class App extends Component {
           <Link to="/feed" className="pure-menu-link">Newsfeed</Link>
         </li>
         <li className="pure-menu-item">
+          <Link to="/post" className="pure-menu-link">Post</Link>
+        </li>
+        <li className="pure-menu-item">
           <Link to="/profile" className="pure-menu-link">Profile</Link>
         </li>
         <LogoutButtonContainer />

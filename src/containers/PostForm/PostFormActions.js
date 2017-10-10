@@ -1,10 +1,9 @@
 import WitnessContract from '../../../build/contracts/Witness.json'
-import { loginUser } from '../LoginButton/LoginButtonActions'
 import store from '../../store'
 
 const contract = require('truffle-contract')
 
-export function signUpUser(name) {
+export function createPost(body) {
   let web3 = store.getState().web3.web3Instance
 
   // Double-check web3's status.
@@ -28,11 +27,11 @@ export function signUpUser(name) {
         authentication.deployed().then(function(instance) {
           authenticationInstance = instance
 
-          // Attempt to sign up user.
-          authenticationInstance.signup(name, {from: coinbase})
+          // Attempt to create new post.
+          authenticationInstance.createNewPost(body, {from: coinbase})
           .then(function(result) {
-            // If no error, login user.
-            return dispatch(loginUser())
+            console.log("attempting to create post!");
+            // return dispatch()
           })
           .catch(function(result) {
             // If error...
