@@ -1,4 +1,4 @@
-import AuthenticationContract from '../../../../build/contracts/Authentication.json'
+import WitnessContract from '../../../../build/contracts/Witness.json'
 import { loginUser } from '../loginbutton/LoginButtonActions'
 import store from '../../../store'
 
@@ -12,7 +12,7 @@ export function signUpUser(name) {
 
     return function(dispatch) {
       // Using truffle-contract we create the authentication object.
-      const authentication = contract(AuthenticationContract)
+      const authentication = contract(WitnessContract)
       authentication.setProvider(web3.currentProvider)
 
       // Declaring this for later so we can chain functions on Authentication.

@@ -5,23 +5,23 @@ class ProfileForm extends Component {
     super(props)
 
     this.state = {
-      name: this.props.name
+      username: this.props.username
     }
   }
 
   onInputChange(event) {
-    this.setState({ name: event.target.value })
+    this.setState({ username: event.target.value })
   }
 
   handleSubmit(event) {
     event.preventDefault()
 
-    if (this.state.name.length < 2)
+    if (this.state.username.length < 2)
     {
-      return alert('Please fill in your name.')
+      return alert('Please fill in your username.')
     }
 
-    this.props.onProfileFormSubmit(this.state.name)
+    this.props.onProfileFormSubmit(this.state.username)
   }
 
   render() {
@@ -29,7 +29,7 @@ class ProfileForm extends Component {
       <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit.bind(this)}>
         <fieldset>
           <label htmlFor="name">Name</label>
-          <input id="name" type="text" value={this.state.name} onChange={this.onInputChange.bind(this)} placeholder="Name" />
+          <input id="name" type="text" value={this.state.username} onChange={this.onInputChange.bind(this)} placeholder="Name" />
           <span className="pure-form-message">This is a required field.</span>
 
           <br />

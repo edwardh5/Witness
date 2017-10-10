@@ -1,4 +1,4 @@
-import AuthenticationContract from '../../../../build/contracts/Authentication.json'
+import WitnessContract from '../../../../build/contracts/Witness.json'
 import store from '../../../store'
 
 const contract = require('truffle-contract')
@@ -19,7 +19,7 @@ export function updateUser(name) {
 
     return function(dispatch) {
       // Using truffle-contract we create the authentication object.
-      const authentication = contract(AuthenticationContract)
+      const authentication = contract(WitnessContract)
       authentication.setProvider(web3.currentProvider)
 
       // Declaring this for later so we can chain functions on Authentication.

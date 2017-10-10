@@ -1,8 +1,8 @@
 pragma solidity^0.4.15;
 
-contract Witness {
-  address public owner;
+import "./zeppelin/ownership/Ownable.sol";
 
+contract Witness is Ownable {
   /*struct Post {
     bytes32 body;
   }*/
@@ -16,12 +16,6 @@ contract Witness {
 
   mapping (address => User) private users;
   mapping (bytes32 => bool) private usernames;
-
-  uint private id; // Stores user id temporarily
-
-  function Witness() {
-    owner = msg.sender;
-  }
 
   modifier ensureNewUser(bytes32 _username) {
     require(
@@ -49,13 +43,13 @@ contract Witness {
 
 // ============================= Auth functions ================================
 
-  function login() ensureExists(users[msg.sender.username]) constant returns(bytes32) {
+  function login() ensureExists(users[msg.sender].username) constant returns(bytes32) {
     return (users[msg.sender].username);
   }
 
   function signup(bytes32 _username) ensureExists(_username) payable returns(bytes32) {
     if (users[msg.sender].username == 0x0) {
-      users[msg.sender].username = _name;
+      users[msg.sender].username = _username;
     }
     return (users[msg.sender].username);
   }
