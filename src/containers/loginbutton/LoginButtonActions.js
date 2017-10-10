@@ -1,6 +1,6 @@
-import WitnessContract from '../../../../build/contracts/Witness.json'
+import WitnessContract from '../../../build/contracts/Witness.json'
 import { browserHistory } from 'react-router'
-import store from '../../../store'
+import store from '../../store'
 
 const contract = require('truffle-contract')
 

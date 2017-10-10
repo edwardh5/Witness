@@ -1,5 +1,5 @@
-import WitnessContract from '../../../../build/contracts/Witness.json'
-import store from '../../../store'
+import WitnessContract from '../../../build/contracts/Witness.json'
+import store from '../../store'
 
 const contract = require('truffle-contract')
 
