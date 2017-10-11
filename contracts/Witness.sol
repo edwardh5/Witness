@@ -1,22 +1,29 @@
-pragma solidity^0.4.15;
+pragma solidity^0.4.17;
+/*pragma experimental ABIDecoderV2;*/
 
 import "./zeppelin/ownership/Ownable.sol";
 
 contract Witness is Ownable {
-  /*struct Post {
+
+// ============================== Declarations =================================
+  Post[] public posts;
+  uint public numPosts = 0;
+
+  struct Post {
+    address creatorAddress;
     bytes32 body;
-  }*/
+  }
 
   struct User {
     bytes32 username;
-    bytes32[] posts;
     address[] following;
   }
 
   mapping (address => User) private users;
   mapping (bytes32 => bool) private usernames;
 
-// =============================== Modifiers ==================================
+
+// ================================ Modifiers ==================================
 
   modifier ensureUsernameUnused(bytes32 _username) {
     require(usernames[_username] != true);
@@ -42,7 +49,7 @@ contract Witness is Ownable {
 
   function login()
     ensureIsNonZero(users[msg.sender].username)
-    constant
+    view
     returns(bytes32)
   {
     return (users[msg.sender].username);
@@ -75,12 +82,20 @@ contract Witness is Ownable {
 
 // ============================ Contract functions =============================
 
-  function getUser(address _userAddress) constant returns(bytes32, bytes32[], address[]) {
+  function getUser(address _userAddress) view returns(bytes32, address[]) {
     return (
       users[_userAddress].username,
-      users[_userAddress].posts,
       users[_userAddress].following
     );
+  }
+
+  function getAllPosts() view returns(Post[]) {
+    Post[numPosts] memory allposts;
+    for (uint postIdx = 0; postIdx < numPosts; postIdx++) {
+      allposts[postIdx].body = posts[postIdx].body;
+      allposts[postIdx].body = posts[postIdx].body;
+    }
+    return allposts;
   }
 
   function createNewPost(bytes32 _body)
@@ -88,7 +103,12 @@ contract Witness is Ownable {
     returns(bool)
   {
     require(_body.length > 0);
-    users[msg.sender].posts.push(_body);
+    Post memory newPost;
+    newPost.body = _body;
+    newPost.creatorAddress = msg.sender;
+
+    posts.push(newPost);
+    numPosts++;
     return true;
   }
 
