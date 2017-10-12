@@ -1,7 +1,8 @@
-import WitnessContract from '../../../build/contracts/Witness.json'
-import store from '../../store'
+import WitnessContract from '../../../build/contracts/Witness.json';
+import { browserHistory } from 'react-router';
+import store from '../../store';
 
-const contract = require('truffle-contract')
+const contract = require('truffle-contract');
 
 export function createPost(body) {
   let web3 = store.getState().web3.web3Instance
@@ -33,7 +34,8 @@ export function createPost(body) {
             gas: 300000,
           })
           .then(function(result) {
-            console.log("attempting to create post!");
+            // created post
+            return browserHistory.push('/feed');
             // return dispatch()
           })
           .catch(function(result) {
