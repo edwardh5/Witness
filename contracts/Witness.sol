@@ -6,20 +6,15 @@ import "./zeppelin/ownership/Ownable.sol";
 contract Witness is Ownable {
 
 // ============================== Declarations =================================
-  Post[] public posts;
-  uint public numPosts = 0;
-
-  struct Post {
-    address creatorAddress;
-    bytes32 body;
-  }
+  bytes32[] public posts;
+  address[] public posters;
 
   struct User {
     bytes32 username;
-    address[] following;
+    /*address[] following;*/
   }
 
-  mapping (address => User) private users;
+  mapping (address => User) public users;
   mapping (bytes32 => bool) private usernames;
 
 
@@ -62,8 +57,6 @@ contract Witness is Ownable {
   {
     if (users[msg.sender].username == 0x0) {
       users[msg.sender].username = _username;
-
-      /*usernames[_username] = true;*/
     }
     return (users[msg.sender].username);
   }
@@ -89,27 +82,43 @@ contract Witness is Ownable {
     );
   }
 
-  function getAllPosts() view returns(Post[]) {
-    Post[numPosts] memory allposts;
-    for (uint postIdx = 0; postIdx < numPosts; postIdx++) {
-      allposts[postIdx].body = posts[postIdx].body;
-      allposts[postIdx].body = posts[postIdx].body;
+  function getPostsLength() view returns(uint) {
+    return posts.length;
+  }
+
+  function getSinglePostFromNth(uint n) view returns(bytes32, address) {
+    return (posts[n], posters[n]);
+  }
+
+  function getTwoPostsFromNth(uint n) view returns(bytes32[2], address[2]) {
+    bytes32[2] memory resPosts;
+    address[2] memory resPosters;
+    for (uint idx = 0; idx < 2; idx++) {
+      if (posts[idx] == 0x0) {
+        resPosts[idx] = 0x0;
+        resPosters[idx] = 0x0;
+      } else {
+        resPosts[idx] = posts[n - idx];
+        resPosters[idx] = posters[n - idx];
+      }
+    }
+    return (resPosts, resPosters);
+  }
+
+  function getAllPosts() view returns(bytes32[]) {
+    bytes32[] memory allposts;
+    for (uint postIdx = 0; postIdx < posts.length; postIdx++) {
+      allposts[postIdx] = posts[postIdx];
     }
     return allposts;
   }
 
   function createNewPost(bytes32 _body)
     userExists(msg.sender)
-    returns(bool)
   {
     require(_body.length > 0);
-    Post memory newPost;
-    newPost.body = _body;
-    newPost.creatorAddress = msg.sender;
-
-    posts.push(newPost);
-    numPosts++;
-    return true;
+    posts.push(_body);
+    posters.push(msg.sender);
   }
 
   function followUser(address _userAddress)

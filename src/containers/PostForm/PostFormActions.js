@@ -26,12 +26,11 @@ export function createPost(body) {
 
         authentication.deployed().then(function(instance) {
           authenticationInstance = instance
-          let estimatedGas = instance.createNewPost.estimateGas(body);
 
           // Attempt to create new post.
           authenticationInstance.createNewPost(body, {
             from: coinbase,
-            gas: (estimatedGas * 1.5)
+            gas: 300000,
           })
           .then(function(result) {
             console.log("attempting to create post!");
