@@ -21,3 +21,9 @@ Built with Solidity, Truffle, and React. Will soon implement IPFS for image host
 + Web hosting using IPFS for complete decentralization.
 + "Following" feature for users to follow each other.
 + "Like" feature to upvote a post.
+
+## Instructions to run
+
++ Install latest version of node.js, truffle (`npm install -g truffle`), testrpc (`npm install -g ethereumjs-testrpc`)
++ Run `testrpc` in terminal
++ Run `truffle deploy && npm run start` in terminal
