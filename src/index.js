@@ -9,7 +9,7 @@ import getWeb3 from './util/web3/getWeb3'
 // Layouts
 import App from './App'
 import Home from './components/Home'
-import Feed from './components/Feed'
+import Feed from './views/FeedView'
 import SignUp from './views/SignUpView'
 import Profile from './views/ProfileView'
 import Post from './views/PostView'

@@ -75,10 +75,10 @@ contract Witness is Ownable {
 
 // ============================ Contract functions =============================
 
-  function getUser(address _userAddress) view returns(bytes32, address[]) {
+  function getUser(address _userAddress) view returns(bytes32) {
     return (
-      users[_userAddress].username,
-      users[_userAddress].following
+      users[_userAddress].username
+      /*users[_userAddress].following*/
     );
   }
 
@@ -121,13 +121,13 @@ contract Witness is Ownable {
     posters.push(msg.sender);
   }
 
-  function followUser(address _userAddress)
+  /*function followUser(address _userAddress)
     userExists(msg.sender)
     userExists(_userAddress)
     notSelf(_userAddress)
   {
     users[msg.sender].following.push(_userAddress);
-  }
+  }*/
 
   function loadFeedOfFollowing(address _userAddress) {
 
