@@ -1,5 +1,6 @@
 import WitnessContract from '../../../build/contracts/Witness.json';
 import store from '../../store';
+import loadFeedByBatch from '../../util/feedUtils';
 
 const contract = require('truffle-contract');
 
@@ -28,14 +29,18 @@ export function loadFeed() {
       cont.setProvider(web3.currentProvider);
 
       cont.deployed().then(instance => {
-        instance.getTwoPostsFromNth(3)
-        .then(res => {
-          console.log(res);
-          dispatch(feedSuccessfullyLoaded(res));
+
+        instance.getPostsLength().then(postLength => {
+          // Get post length
+          loadFeedByBatch(postLength, instance).then(res => {
+            dispatch(feedSuccessfullyLoaded(res));
+          });
+
         })
         .catch(err => {
           console.error(err);
         })
+
       })
     }
   } else {

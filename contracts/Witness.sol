@@ -86,11 +86,16 @@ contract Witness is Ownable {
     return posts.length;
   }
 
-  function getSinglePostFromNth(uint n) view returns(bytes32, address) {
-    return (posts[n], posters[n]);
+  function getSinglePostFromNthIdx(uint n) view returns(bytes32[1], address[1]) {
+    bytes32[1] memory resPost;
+    address[1] memory resPoster;
+
+    resPost[0] = posts[n];
+    resPoster[0] = posters[n];
+    return (resPost, resPoster);
   }
 
-  function getTwoPostsFromNth(uint n) view returns(bytes32[2], address[2]) {
+  function getTwoPostsFromNthIdx(uint n) view returns(bytes32[2], address[2]) {
     bytes32[2] memory resPosts;
     address[2] memory resPosters;
     for (uint idx = 0; idx < 2; idx++) {
