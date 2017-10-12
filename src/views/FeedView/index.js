@@ -21,6 +21,15 @@ class Feed extends Component {
             <p>
               <strong>Congratulations {this.props.authData.name}!&nbsp;</strong>
             </p>
+            <ul>
+              {
+                this.props.feed && this.props.feed[0].map((feedItem, feedIdx) => (
+                  <li key={feedIdx}>
+                    {this.props.feed[0][feedIdx]} posted by {this.props.feed[1][feedIdx]}
+                  </li>
+                ))
+              }
+            </ul>
           </div>
         </div>
       </main>
@@ -29,7 +38,7 @@ class Feed extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {};
+  return state.feed;
 }
 
 const mapDispatchToProps = (dispatch) => {

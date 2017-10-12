@@ -3,12 +3,12 @@ import store from '../../store';
 
 const contract = require('truffle-contract');
 
-export const LOADING_FEED = 'LOADING_FEED'
-function loadingFeed() {
-  return {
-    type: LOADING_FEED
-  }
-}
+// export const LOADING_FEED = 'LOADING_FEED'
+// function loadingFeed() {
+//   return {
+//     type: LOADING_FEED
+//   }
+// }
 
 export const LOAD_FEED_SUCCESS = 'LOAD_FEED_SUCCESS'
 function feedSuccessfullyLoaded(feed) {
