@@ -86,25 +86,25 @@ contract Witness is Ownable {
     return posts.length;
   }
 
-  function getSinglePostFromNthIdx(uint n) view returns(bytes32[1], address[1]) {
+  function getSinglePostFromNthIdx(uint n) view returns(bytes32[1], bytes32[1]) {
     bytes32[1] memory resPost;
-    address[1] memory resPoster;
+    bytes32[1] memory resPoster;
 
     resPost[0] = posts[n];
-    resPoster[0] = posters[n];
+    resPoster[0] = users[posters[n]].username;
     return (resPost, resPoster);
   }
-
-  function getTwoPostsFromNthIdx(uint n) view returns(bytes32[2], address[2]) {
+  /* Maybe do 2, 4, 6, 8, 10 */
+  function getTwoPostsFromNthIdx(uint n) view returns(bytes32[2], bytes32[2]) {
     bytes32[2] memory resPosts;
-    address[2] memory resPosters;
+    bytes32[2] memory resPosters;
     for (uint idx = 0; idx < 2; idx++) {
       if (posts[idx] == 0x0) {
         resPosts[idx] = 0x0;
         resPosters[idx] = 0x0;
       } else {
         resPosts[idx] = posts[n - idx];
-        resPosters[idx] = posters[n - idx];
+        resPosters[idx] = users[posters[n - idx]].username;
       }
     }
     return (resPosts, resPosters);

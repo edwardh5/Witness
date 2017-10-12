@@ -3,12 +3,13 @@
 function loadFeedByBatch(feedLength, contractInst) {
   const promises = [];
   for (let i = feedLength; i > 0; i -= 2) {
-    if (i - 2 >= 1) {
+    if (i - 2 >= 1 || i - 2 === 0) {
       promises.push(contractInst.getTwoPostsFromNthIdx(i - 1));
     } else {
       promises.push(contractInst.getSinglePostFromNthIdx(i - 1));
     }
   }
+
   let posts = [];
   let addresses = [];
   return Promise.all(promises).then(batchedPosts => {
