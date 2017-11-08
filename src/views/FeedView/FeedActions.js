@@ -1,6 +1,6 @@
 import WitnessContract from '../../../build/contracts/Witness.json';
 import store from '../../store';
-import loadFeedByBatch from '../../util/feedUtils';
+// import loadFeedByBatch from '../../util/feedUtils';
 
 const contract = require('truffle-contract');
 
@@ -28,22 +28,33 @@ export function loadFeed() {
       const cont = contract(WitnessContract);
       cont.setProvider(web3.currentProvider);
 
-      cont.deployed().then(instance => {
+      cont.deployed().then(async (instance) => {
+        const lastPostId = await instance.lastPostId();
+        let res = [];
 
-        instance.getPostsLength().then(postLength => {
-          // Get post length
-          loadFeedByBatch(postLength, instance).then(res => {
-            dispatch(feedSuccessfullyLoaded(res));
-          });
+        for (let i = lastPostId.c[0] - 1; i >= 0; i--) {
+          const post = await instance.returnPost(i);
+          const username = await instance.returnUsername(post[0]);
+          res.push({username, body: post[1], timestamp: post[2]});
+        }
+        dispatch(feedSuccessfullyLoaded(res));
+
+        // instance.getPostsLength().then(postLength => {
+        //   // Get post length
+        //   loadFeedByBatch(postLength, instance).then(res => {
+        //     dispatch(feedSuccessfullyLoaded(res));
+        //   });
 
         })
         .catch(err => {
           console.error(err);
         })
 
-      })
+      // })
     }
   } else {
     console.error('Web3 is not initialized.');
   }
 }
+
+// export loadFeed;

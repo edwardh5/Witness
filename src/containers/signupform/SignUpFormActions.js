@@ -26,16 +26,15 @@ export function signUpUser(name) {
         }
 
         authentication.deployed().then(function(instance) {
+          window.inst = instance;
           authenticationInstance = instance
-
           // Attempt to sign up user.
-          authenticationInstance.signup(name, {from: coinbase})
+          authenticationInstance.createUser(name, {from: coinbase})
           .then(function(result) {
             // If no error, login user.
             return dispatch(loginUser())
           })
           .catch(function(result) {
-            // If error...
           })
         })
       })

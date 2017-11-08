@@ -2,139 +2,63 @@ pragma solidity^0.4.17;
 /*pragma experimental ABIDecoderV2;*/
 
 import "./zeppelin/ownership/Ownable.sol";
+import "./strings.sol";
+
 
 contract Witness is Ownable {
+  using strings for *;
 
-// ============================== Declarations =================================
-  bytes32[] public posts;
-  address[] public posters;
+  struct Post {
+    address author;
+    string ipfsHash;
+    uint timestamp;
+  }
 
   struct User {
     bytes32 username;
-    /*address[] following;*/
   }
 
   mapping (address => User) public users;
-  mapping (bytes32 => bool) private usernames;
+  mapping (uint => Post) public posts;
+  uint public lastPostId;
+  uint public userCount;
 
-
-// ================================ Modifiers ==================================
-
-  modifier ensureUsernameUnused(bytes32 _username) {
-    require(usernames[_username] != true);
-    _;
+  function Witness() {
+    lastPostId = 0;
+    userCount = 0;
   }
 
-  modifier userExists(address _userAddress) {
-    require(users[_userAddress].username != 0x0);
-    _;
+  function createUser(bytes32 _username) returns (bytes32) {
+    require(users[msg.sender].username == 0x0);
+    users[msg.sender].username = _username;
+    userCount += 1;
+    return users[msg.sender].username;
   }
 
-  modifier notSelf(address _userAddress) {
-    require(_userAddress != msg.sender);
-    _;
+  function returnUsername(address _address) view returns (bytes32) {
+    return users[_address].username;
   }
 
-  modifier ensureIsNonZero(bytes32 name) {
-    require(name != 0x0);
-    _;
+  function login() view returns (bytes32) {
+    require(users[msg.sender].username != 0x0);
+    return users[msg.sender].username;
   }
 
-// ============================= Auth functions ================================
-
-  function login()
-    ensureIsNonZero(users[msg.sender].username)
-    view
-    returns(bytes32)
-  {
-    return (users[msg.sender].username);
+  function update(bytes32 _username) {
+    require(users[msg.sender].username != 0x0);
+    users[msg.sender].username = _username;
   }
 
-  function signup(bytes32 _username)
-    ensureIsNonZero(_username)
-    payable
-    returns(bytes32)
-  {
-    if (users[msg.sender].username == 0x0) {
-      users[msg.sender].username = _username;
-    }
-    return (users[msg.sender].username);
+  function createPost(string _ipfsHash) public {
+    require(_ipfsHash.toSlice().len() > 0);
+    posts[lastPostId].author = msg.sender;
+    posts[lastPostId].ipfsHash = _ipfsHash;
+    posts[lastPostId].timestamp = block.timestamp;
+    ++lastPostId;
   }
 
-  function update(bytes32 _username)
-    ensureIsNonZero(_username)
-    payable
-    returns(bytes32)
-  {
-    if (users[msg.sender].username != 0x0) {
-      users[msg.sender].username = _username;
-      return (users[msg.sender].username);
-    }
-    revert();
+  function returnPost(uint _postIndex) public view returns (address, string, uint ) {
+    return (posts[_postIndex].author, posts[_postIndex].ipfsHash, posts[_postIndex].timestamp);
   }
 
-// ============================ Contract functions =============================
-
-  function getUser(address _userAddress) view returns(bytes32) {
-    return (
-      users[_userAddress].username
-      /*users[_userAddress].following*/
-    );
-  }
-
-  function getPostsLength() view returns(uint) {
-    return posts.length;
-  }
-
-  function getSinglePostFromNthIdx(uint n) view returns(bytes32[1], bytes32[1]) {
-    bytes32[1] memory resPost;
-    bytes32[1] memory resPoster;
-
-    resPost[0] = posts[n];
-    resPoster[0] = users[posters[n]].username;
-    return (resPost, resPoster);
-  }
-  /* Maybe do 2, 4, 6, 8, 10 */
-  function getTwoPostsFromNthIdx(uint n) view returns(bytes32[2], bytes32[2]) {
-    bytes32[2] memory resPosts;
-    bytes32[2] memory resPosters;
-    for (uint idx = 0; idx < 2; idx++) {
-      if (posts[idx] == 0x0) {
-        resPosts[idx] = 0x0;
-        resPosters[idx] = 0x0;
-      } else {
-        resPosts[idx] = posts[n - idx];
-        resPosters[idx] = users[posters[n - idx]].username;
-      }
-    }
-    return (resPosts, resPosters);
-  }
-
-  function getAllPosts() view returns(bytes32[]) {
-    bytes32[] memory allposts;
-    for (uint postIdx = 0; postIdx < posts.length; postIdx++) {
-      allposts[postIdx] = posts[postIdx];
-    }
-    return allposts;
-  }
-
-  function createNewPost(bytes32 _body)
-    userExists(msg.sender)
-  {
-    require(_body.length > 0);
-    posts.push(_body);
-    posters.push(msg.sender);
-  }
-
-  /*function followUser(address _userAddress)
-    userExists(msg.sender)
-    userExists(_userAddress)
-    notSelf(_userAddress)
-  {
-    users[msg.sender].following.push(_userAddress);
-  }*/
-
-  function loadFeedOfFollowing(address _userAddress) {
-
-  }
 }

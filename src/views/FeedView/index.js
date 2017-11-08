@@ -24,11 +24,11 @@ class Feed extends Component {
             </p>
             <ul>
               {
-                this.props.feed && this.props.feed[0].map((feedItem, feedIdx) => (
+                this.props.feed && this.props.feed.map((feedItem, feedIdx) => (
                   <li key={feedIdx}>
-                    {hex2Ascii(this.props.feed[0][feedIdx])}&nbsp;
+                    {feedItem.body}&nbsp;
                     posted by&nbsp;
-                    {hex2Ascii(this.props.feed[1][feedIdx])}
+                    {hex2Ascii(feedItem.username)}
                   </li>
                 ))
               }

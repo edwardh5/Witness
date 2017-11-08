@@ -1,5 +1,6 @@
 import WitnessContract from '../../../build/contracts/Witness.json';
 import { browserHistory } from 'react-router';
+import { loadFeed } from '../../views/FeedView/FeedActions';
 import store from '../../store';
 
 const contract = require('truffle-contract');
@@ -29,12 +30,13 @@ export function createPost(body) {
           authenticationInstance = instance
 
           // Attempt to create new post.
-          authenticationInstance.createNewPost(body, {
+          authenticationInstance.createPost(body, {
             from: coinbase,
             gas: 300000,
           })
           .then(function(result) {
             // created post
+            dispatch(loadFeed())
             return browserHistory.push('/feed');
             // return dispatch()
           })
