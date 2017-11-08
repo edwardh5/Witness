@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { loadFeed } from './FeedActions';
 import hex2Ascii from '../../util/helpers';
 
+
 class Feed extends Component {
   constructor(props, { authData }) {
     super(props);

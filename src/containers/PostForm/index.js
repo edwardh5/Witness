@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { createPost } from './PostFormActions'
+import IPFS  from 'ipfs-mini';
 
 
 class PostForm extends Component {
@@ -10,6 +11,11 @@ class PostForm extends Component {
     this.state = {
       post: ''
     }
+    this.ipfs = new IPFS({
+      host: 'ipfs.infura.io',
+      port: 5001,
+      protocol: 'https'
+    });
   }
 
   onInputChange(event) {
@@ -19,12 +25,16 @@ class PostForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    if (this.state.post.length < 1)
-    {
+    if (this.state.post.length < 1) {
       return alert('Your post cannot be blank.')
     }
 
-    this.props.onPostFormSubmit(this.state.post)
+    this.ipfs.add(this.state.post, (err, hash) => {
+      if (err) {
+        return console.log("error:", err);
+      }
+      this.props.onPostFormSubmit(hash);
+    });
   }
 
   render() {

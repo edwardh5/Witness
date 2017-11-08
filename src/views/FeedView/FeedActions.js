@@ -1,8 +1,15 @@
 import WitnessContract from '../../../build/contracts/Witness.json';
 import store from '../../store';
+import IPFS  from 'ipfs-mini';
 // import loadFeedByBatch from '../../util/feedUtils';
 
 const contract = require('truffle-contract');
+
+const ipfs = new IPFS({
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https'
+});
 
 // export const LOADING_FEED = 'LOADING_FEED'
 // function loadingFeed() {
@@ -32,9 +39,13 @@ export function loadFeed() {
 
         for (let i = lastPostId.c[0] - 1; i >= 0; i--) {
           const post = await instance.returnPost(i);
-
           const username = await instance.returnUsername(post[0]);
-          res.push({username, body: post[1], timestamp: post[2]});
+          ipfs.cat(post[1], (err, data) => {
+            if (err) {
+              return console.log(err);
+            }
+            res.push({username, body: data, timestamp: post[2]});
+          });
         }
         dispatch(feedSuccessfullyLoaded(res));
       })
