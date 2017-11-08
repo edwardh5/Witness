@@ -21,9 +21,7 @@ function feedSuccessfullyLoaded(feed) {
 
 export function loadFeed() {
   let web3 = store.getState().web3.web3Instance;
-
   if (typeof web3 !== 'undefined') {
-
     return (dispatch) => {
       const cont = contract(WitnessContract);
       cont.setProvider(web3.currentProvider);
@@ -34,27 +32,17 @@ export function loadFeed() {
 
         for (let i = lastPostId.c[0] - 1; i >= 0; i--) {
           const post = await instance.returnPost(i);
+
           const username = await instance.returnUsername(post[0]);
           res.push({username, body: post[1], timestamp: post[2]});
         }
         dispatch(feedSuccessfullyLoaded(res));
-
-        // instance.getPostsLength().then(postLength => {
-        //   // Get post length
-        //   loadFeedByBatch(postLength, instance).then(res => {
-        //     dispatch(feedSuccessfullyLoaded(res));
-        //   });
-
-        })
-        .catch(err => {
-          console.error(err);
-        })
-
-      // })
+      })
+      .catch(err => {
+        console.error(err);
+      })
     }
   } else {
     console.error('Web3 is not initialized.');
   }
 }
-
-// export loadFeed;

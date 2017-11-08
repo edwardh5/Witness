@@ -34,9 +34,9 @@ export function createPost(body) {
             from: coinbase,
             gas: 300000,
           })
-          .then(function(result) {
+          .then(async (result) => {
             // created post
-            dispatch(loadFeed())
+            await dispatch(loadFeed())
             return browserHistory.push('/feed');
             // return dispatch()
           })
