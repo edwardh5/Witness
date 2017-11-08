@@ -1,12 +1,17 @@
 const initialState = {
-  feed: null
+  feed: null,
+  loadingFeed: false,
 }
 
 const feedReducer = (state = initialState, action) => {
-  if (action.type === 'LOAD_FEED_SUCCESS')
-  {
+  if (action.type === 'LOADING_FEED') {
     return Object.assign({}, state, {
-      feed: action.payload
+      loadingFeed: true,
+    });
+  } else if (action.type === 'LOAD_FEED_SUCCESS') {
+    return Object.assign({}, state, {
+      feed: action.payload,
+      loadingFeed: false,
     });
   }
 

@@ -1,7 +1,6 @@
 import WitnessContract from '../../../build/contracts/Witness.json';
 import store from '../../store';
 import IPFS  from 'ipfs-mini';
-// import loadFeedByBatch from '../../util/feedUtils';
 
 const contract = require('truffle-contract');
 
@@ -11,12 +10,12 @@ const ipfs = new IPFS({
   protocol: 'https'
 });
 
-// export const LOADING_FEED = 'LOADING_FEED'
-// function loadingFeed() {
-//   return {
-//     type: LOADING_FEED
-//   }
-// }
+export const LOADING_FEED = 'LOADING_FEED'
+function loadingFeed() {
+  return {
+    type: LOADING_FEED,
+  }
+}
 
 export const LOAD_FEED_SUCCESS = 'LOAD_FEED_SUCCESS'
 function feedSuccessfullyLoaded(feed) {
@@ -30,6 +29,9 @@ export function loadFeed() {
   let web3 = store.getState().web3.web3Instance;
   if (typeof web3 !== 'undefined') {
     return (dispatch) => {
+      
+      dispatch(loadingFeed());
+
       const cont = contract(WitnessContract);
       cont.setProvider(web3.currentProvider);
 
