@@ -19,17 +19,21 @@ function loadingFeed() {
 
 export const LOAD_FEED_SUCCESS = 'LOAD_FEED_SUCCESS'
 function feedSuccessfullyLoaded(feed) {
+  console.log("this is supposed to come second")
   return {
     type: LOAD_FEED_SUCCESS,
     payload: feed,
   }
 }
 
+
+// Problem is that the async calls are out of order. Dispatch is being called before
+// async posts are successfully resolved.
 export function loadFeed() {
   let web3 = store.getState().web3.web3Instance;
   if (typeof web3 !== 'undefined') {
     return (dispatch) => {
-      
+
       dispatch(loadingFeed());
 
       const cont = contract(WitnessContract);
@@ -37,19 +41,31 @@ export function loadFeed() {
 
       cont.deployed().then(async (instance) => {
         const lastPostId = await instance.lastPostId();
-        let res = [];
+        let posts = [];
 
+        // Can be optimized for parallel calls
         for (let i = lastPostId.c[0] - 1; i >= 0; i--) {
-          const post = await instance.returnPost(i);
-          const username = await instance.returnUsername(post[0]);
-          ipfs.cat(post[1], (err, data) => {
+          const rawPost = await instance.returnPost(i);
+          const postAuthor = rawPost[0];
+          const postIpfsHash = rawPost[1];
+          const postTimestamp = rawPost[2];
+
+          ipfs.cat(postIpfsHash, (err, data) => {
             if (err) {
               return console.log(err);
             }
-            res.push({username, body: data, timestamp: post[2]});
+
+            const postInfo = {
+              username: postAuthor,
+              body: data,
+              timestamp: postTimestamp
+            };
+
+            posts.push(postInfo);
           });
         }
-        dispatch(feedSuccessfullyLoaded(res));
+
+        dispatch(feedSuccessfullyLoaded(posts));
       })
       .catch(err => {
         console.error(err);

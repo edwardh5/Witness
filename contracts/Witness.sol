@@ -58,7 +58,11 @@ contract Witness is Ownable {
   }
 
   function returnPost(uint _postIndex) public view returns (address, string, uint ) {
-    return (posts[_postIndex].author, posts[_postIndex].ipfsHash, posts[_postIndex].timestamp);
+    return (
+      returnUsername(posts[_postIndex].author),
+      posts[_postIndex].ipfsHash, 
+      posts[_postIndex].timestamp
+    );
   }
 
 }

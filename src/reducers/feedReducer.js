@@ -1,28 +1,23 @@
 const initialState = {
-  feed: null,
+  feed: [],
   loadingFeed: false,
 }
 
 const feedReducer = (state = initialState, action) => {
-  if (action.type === 'LOADING_FEED') {
-    return Object.assign({}, state, {
-      loadingFeed: true,
-    });
-  } else if (action.type === 'LOAD_FEED_SUCCESS') {
-    return Object.assign({}, state, {
-      feed: action.payload,
-      loadingFeed: false,
-    });
+  switch (action.type) {
+    case 'LOADING_FEED':
+      return Object.assign({}, state, {
+        feed: action.payload,
+        loadingFeed: true,
+      });
+    case 'LOAD_FEED_SUCCESS':
+      return Object.assign({}, state, {
+        feed: action.payload,
+        loadingFeed: false,
+      });
+    default:
+      return state;
   }
-
-  // if (action.type === 'LOADING_FEED')
-  // {
-  //   return Object.assign({}, state, {
-  //     data: null
-  //   })
-  // }
-
-  return state;
 }
 
 export default feedReducer;

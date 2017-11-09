@@ -5,9 +5,9 @@ import hex2Ascii from '../../util/helpers';
 
 
 class Feed extends Component {
-  constructor(props, { authData }) {
+  constructor(props) {
     super(props);
-    authData = this.props;
+    this.name = props.authData.name;
   }
 
   componentWillMount() {
@@ -26,7 +26,7 @@ class Feed extends Component {
               ""
             }
             <p>
-              <strong>Hello, {this.props.authData.name}. Welcome to your newsfeed.&nbsp;</strong>
+              <strong>Hello, {this.name}. Welcome to your newsfeed.&nbsp;</strong>
             </p>
             <ul>
               {
